@@ -1,0 +1,253 @@
+@use 'sass:map';
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+  cursor: none;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+  position: relative;
+	min-height: 100vh;
+	min-width: 100vw;
+	width: 100%;
+	height: 100%;
+	min-height: -webkit-fill-available;
+	overflow: hidden;
+	background-color: #000;
+	color: #fff;
+}
+
+// ======================
+
+:root {
+  --deg: 0;
+}
+
+main {
+	display: grid;
+	place-items: center;
+	min-height: 100vh;
+}
+
+#anchor {
+	$size: 75vmin;
+	$ball: calc($size * 0.044);
+	$pupil: calc($ball * 0.20);
+
+	position: relative;
+	width: $size;
+	aspect-ratio: 1 / 1;
+
+  img {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+  
+  &:active {
+    .ball {
+        &:nth-of-type(1) { .eye { animation: swirly 300ms linear infinite forwards;}}
+        &:nth-of-type(2) { .eye { animation: swirly 300ms 100ms linear infinite reverse;}}
+        &:nth-of-type(3) { .eye { animation: swirly 300ms linear infinite forwards;}}
+        &:nth-of-type(4) { .eye { animation: swirly 300ms  100ms linear infinite reverse;}}
+    }
+  }
+
+	#eyes {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+
+		.ball {
+			position: absolute;
+      z-index: 2;
+
+			display: block;
+			width: $ball;
+			height: $ball;
+			border-radius: 100%;
+			background: #fff;
+			overflow: hidden;
+
+			.pupil {
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				transform: translate(-50%, 0%);
+
+				display: block;
+				width: $pupil;
+				height: $pupil;
+				border-radius: 100%;
+				background: #000;
+				overflow: hidden;
+			}
+		}
+
+		.ball {
+      .eye {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+        transform: rotate(var(--deg));
+      }
+			&:nth-of-type(1) {
+				top: 0%;
+        right: 50%;
+        transform: translate(395%, 440%);
+			}
+
+			&:nth-of-type(2) {
+        top: 0%;
+        right: 50%;
+        transform: translate(205%, 440%);
+			}
+
+			&:nth-of-type(3) {
+        top: 0%;
+        right: 50%;
+        transform: translate(-50%, 828%);
+			}
+
+			&:nth-of-type(4) {
+        top: 0%;
+        right: 50%;
+        transform: translate(-260%, 860%);
+			}
+		}
+	}
+}
+
+// ======================
+
+@mixin setDir($d: 1, $t: 0) {
+  $mid: translate(-50%, -50%);
+  $dir: scaleX(1);
+  $tilt: rotate(0);
+  $dd: 1;
+  $tt: 0;
+      
+  $tilts: (
+    '1': (
+      '-1': 45deg, '0': 0deg, '1': -45deg
+    ),
+    '-1': (
+      '-1': 45deg, '0': 0deg, '1': -45deg
+    )
+  );
+  
+  @if ($d == 1 or $d == -1) {
+    $dd: $d;
+    $dir: scaleX($dd);
+  }
+  
+  @if ($t == 1 or $t == 0 or $t == -1) {
+    $tt: $t;
+    $deg: map.get($tilts, '#{$dd}', '#{$tt}');
+    @if ($deg != null) {
+      $tilt: rotate($deg);
+    }
+  }
+  
+  transform: $mid $dir $tilt rotate(var(--deg));
+}
+
+
+#cursor {
+  $curSize: 50px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  z-index: 99999;
+  pointer-events: none;
+
+  
+  img {
+    display: block;
+    width: $curSize;
+    height: $curSize;
+  }
+  
+  @include setDir();
+  
+  &.left {
+    
+    img {
+      transform: scaleX(-1);
+    }
+    
+    &-center {
+      @include setDir(-1, 0);
+    }
+    
+    &-down {
+      @include setDir(-1, -1);
+    }
+    
+    &-up {
+      @include setDir(-1, 1);
+    }
+  }
+  
+  &.right {
+    img {
+      transform: scaleX(1);
+    }
+    
+    &-center {
+      @include setDir(1, 0);
+    }
+    
+    &-down {
+      @include setDir(1, -1);
+    }
+    
+    &-up {
+      @include setDir(1, 1);
+    }
+  }
+  
+  
+}
+
+
+
+#log {
+  position: absolute;
+  display: flex;
+  flex-flow: column nowrap;
+  top: 0;
+  left: 0;
+  color: palevioletred;
+  font-size: 20px;
+  padding: 1ch 2ch;
+}
+
+// ======================
+
+
+@keyframes swirly {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
