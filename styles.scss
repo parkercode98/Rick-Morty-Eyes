@@ -6,7 +6,16 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-  cursor: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+::selection {
+  background-color: transparent;
+  color: transparent;
 }
 
 html,
@@ -24,6 +33,7 @@ body {
 	overflow: hidden;
 	background-color: #000;
 	color: #fff;
+  cursor: none;
 }
 
 // ======================
@@ -135,36 +145,33 @@ main {
 
 // ======================
 
-@mixin setDir($d: 1, $t: 0) {
-  $mid: translate(-50%, -50%);
+@mixin setDir($d: 1) {
+  $mouth: translate(-20%,-65%);
   $dir: scaleX(1);
-  $tilt: rotate(0);
   $dd: 1;
-  $tt: 0;
-      
-  $tilts: (
-    '1': (
-      '-1': 45deg, '0': 0deg, '1': -45deg
-    ),
-    '-1': (
-      '-1': 45deg, '0': 0deg, '1': -45deg
-    )
-  );
   
   @if ($d == 1 or $d == -1) {
     $dd: $d;
-    $dir: scaleX($dd);
-  }
-  
-  @if ($t == 1 or $t == 0 or $t == -1) {
-    $tt: $t;
-    $deg: map.get($tilts, '#{$dd}', '#{$tt}');
-    @if ($deg != null) {
-      $tilt: rotate($deg);
+
+    @if ($dd == 1) {
+      $mouth: translate(-80%,-65%);
+    } @else {
+      $mouth: translate(-20%,-65%);
     }
   }
   
-  transform: $mid $dir $tilt rotate(var(--deg));
+  transform: $mouth rotate(var(--deg));
+}
+
+#nugget {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  background: #FFC907;
+  box-shadow: 0px 0px 16px 5px rgba($color: #FFC907, $alpha: 0.45);
+  z-index: 999999;
 }
 
 
@@ -174,59 +181,86 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translate(-50%, -50%);
   z-index: 99999;
   pointer-events: none;
+  // border: 1px solid #FFC907;
 
-  
   img {
     display: block;
     width: $curSize;
     height: $curSize;
   }
   
+  #trail {
+    $trail: rgba(229, 221, 0, 0.0);
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0%, -50%);
+    height: 4px;
+    width: 4px;
+    border-radius: 100%;
+    background: #FFC907;
+    z-index: 99999;
+  }
+  
   @include setDir();
   
   &.left {
-    
+    @include setDir(-1);
+
     img {
       transform: scaleX(-1);
     }
     
-    &-center {
-      @include setDir(-1, 0);
+    #trail {
+      left: 0;
+      right: unset;
+      transform: scaleX(1);
     }
     
-    &-down {
-      @include setDir(-1, -1);
-    }
+    // &-center {
+    //   @include setDir(-1);
+    // }
     
-    &-up {
-      @include setDir(-1, 1);
-    }
+    // &-down {
+    //   @include setDir(-1, -1);
+    // }
+    
+    // &-up {
+    //   @include setDir(-1, 1);
+    // }
   }
   
   &.right {
+    @include setDir(1);
+    
     img {
       transform: scaleX(1);
     }
     
-    &-center {
-      @include setDir(1, 0);
+    #trail {
+      left: unset;
+      right: 0;
+      transform: scaleX(1);
     }
     
-    &-down {
-      @include setDir(1, -1);
-    }
+    // &-center {
+    //   @include setDir(1, 0);
+    // }
     
-    &-up {
-      @include setDir(1, 1);
-    }
+    // &-down {
+    //   @include setDir(1, -1);
+    // }
+    
+    // &-up {
+    //   @include setDir(1, 1);
+    // }
   }
   
   
 }
-
 
 
 #log {

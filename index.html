@@ -6,12 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eyes Follow Mouse</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="shortcut icon" type="image/png" href="https://avatars.githubusercontent.com/u/76987504?s=400&u=f675d368042bfe931e9c850addd9011dd4c6ce7e&v=4.png"/>
   <script defer src="app.js"></script>
 </head>
 <body>
   
-  <div id="cursor"><img src="./img/bee.png" alt="Bee"></div>
-  <div id="log"></div>
+  <span id="nugget"></span>
+  <div id="cursor">
+    <img src="./img/bee.png" alt="Bee" class="bee">
+    <span id="trail"></span>
+  </div>
   
   <main>
     
@@ -48,5 +52,10 @@
     
   </main>
   
+  <audio id="audio" loop="true" preload="true" >
+    <source src="./assets/Funny Song.mp3" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+
 </body>
 </html>
